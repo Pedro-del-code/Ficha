@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D&D 5e — Ficha de Personagem</title>
+<link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:      #1a0e05;
+  --parch:    #f2e8c9;
+  --parch2:   #e8d8a8;
+  --parch3:   #d4bf88;
+  --red:      #8b1a1a;
+  --red2:     #c0392b;
+  --gold:     #b8860b;
+  --gold2:    #d4a017;
+  --gold3:    #f0c040;
+  --shadow:   rgba(0,0,0,0.55);
+  --glows:    rgba(184,134,11,0.35);
+  --bg1:      #0c0806;
+  --bg2:      #140f09;
+  --bg3:      #1e1510;
+  --panel:    rgba(20,12,6,0.96);
+  --border:   rgba(184,134,11,0.45);
+  --border2:  rgba(184,134,11,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+
+body {
+  background: var(--bg1);
+  color: var(--parch);
+  font-family: 'IM Fell English', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── BACKGROUND ── */
+body::before {
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 10%, rgba(139,26,26,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 85% 90%, rgba(184,134,11,.10) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(30,20,10,.85) 0%, transparent 100%),
+    repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(184,134,11,.015) 80px, rgba(184,134,11,.015) 81px),
+    repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(184,134,11,.015) 80px, rgba(184,134,11,.015) 81px);
+  pointer-events:none;z-index:0;
+}
+
+/* ── NOISE GRAIN ── */
+body::after {
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.6;
+}
+
+.wrap {
+  position:relative;z-index:1;
+  max-width:760px;
+  margin:0 auto;
+  padding:2rem 1.25rem 5rem;
+}
+
+/* ── HEADER ── */
+.site-header {
+  text-align:center;
+  padding:2.5rem 0 1rem;
+  position:relative;
+}
+.dnd-logo {
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1rem,3vw,1.3rem);
+  color:var(--gold2);
+  letter-spacing:.4em;
+  text-transform:uppercase;
+  opacity:.75;
+  margin-bottom:.3rem;
+}
+.site-title {
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1.6rem,5vw,2.8rem);
+  color:var(--parch);
+  text-shadow:0 0 40px var(--glows), 0 3px 8px rgba(0,0,0,.9);
+  line-height:1.1;
+  letter-spacing:.02em;
+}
+.site-title span { color:var(--gold3); }
+.site-sub {
+  font-family:'Cinzel',serif;
+  font-size:.75rem;
+  color:var(--parch3);
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  margin-top:.6rem;
+  opacity:.7;
+}
+
+/* ── ORNAMENTAL DIVIDER ── */
+.divider {
+  display:flex;align-items:center;gap:.8rem;
+  margin:1.4rem 0;
+}
+.div-line {
+  flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),var(--gold),transparent);
+}
+.div-gem {
+  width:10px;height:10px;
+  background:var(--gold2);
+  transform:rotate(45deg);
+  box-shadow:0 0 14px var(--glows);
+  flex-shrink:0;
+  position:relative;
+}
+.div-gem::before,.div-gem::after {
+  content:'';
+  position:absolute;
+  width:4px;height:4px;
+  background:var(--gold3);
+  transform:rotate(0deg);
+  top:3px;left:3px;
+}
+.div-sm .div-line { background:linear-gradient(90deg,transparent,rgba(184,134,11,.4),transparent); }
+.div-sm .div-gem { width:6px;height:6px; background:rgba(184,134,11,.5);}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap { margin:1.5rem 0 2rem; }
+.progress-steps {
+  display:flex;
+  justify-content:center;
+  gap:.3rem;
+  flex-wrap:wrap;
+  margin-bottom:.8rem;
+}
+.ps {
+  width:28px;height:28px;
+  border-radius:50%;
+  background:var(--bg3);
+  border:1px solid rgba(184,134,11,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;
+  font-size:.65rem;
+  color:rgba(184,134,11,.4);
+  transition:all .4s ease;
+  cursor:default;
+}
+.ps.active {
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border-color:var(--gold3);
+  color:var(--ink);
+  box-shadow:0 0 16px var(--glows);
+  transform:scale(1.2);
+  font-weight:700;
+}
+.ps.done {
+  background:rgba(184,134,11,.25);
+  border-color:var(--gold);
+  color:var(--gold2);
+}
+.progress-label {
+  text-align:center;
+  font-family:'Cinzel',serif;
+  font-size:.7rem;
+  color:var(--gold);
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  opacity:.8;
+}
+
+/* ── PANEL ── */
+.panel {
+  background:linear-gradient(160deg,rgba(26,18,10,.97) 0%,rgba(14,9,4,.99) 100%);
+  border:1px solid var(--border);
+  border-radius:3px;
+  padding:2.5rem 2rem;
+  position:relative;
+  box-shadow:0 0 0 1px rgba(184,134,11,.06), 0 25px 70px rgba(0,0,0,.7), inset 0 1px 0 rgba(184,134,11,.12);
+}
+.panel::before {
+  content:'';position:absolute;inset:8px;
+  border:1px solid rgba(184,134,11,.06);
+  border-radius:1px;pointer-events:none;
+}
+/* corner ornaments */
+.panel::after { content:'✦';position:absolute;top:12px;right:16px;color:rgba(184,134,11,.3);font-size:.65rem; }
+.panel-corner { position:absolute;top:12px;left:16px;color:rgba(184,134,11,.3);font-size:.65rem; }
+
+/* ── STEPS ── */
+.step { display:none; }
+.step.active { display:block; animation:slideUp .45s cubic-bezier(.16,1,.3,1); }
+@keyframes slideUp {
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+.step-eyebrow {
+  font-family:'Cinzel',serif;
+  font-size:.7rem;
+  color:var(--gold);
+  letter-spacing:.25em;
+  text-transform:uppercase;
+  opacity:.8;
+  margin-bottom:.3rem;
+}
+.step-title {
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1.1rem,3vw,1.5rem);
+  color:var(--parch);
+  text-shadow:0 0 24px var(--glows);
+  margin-bottom:.4rem;
+  line-height:1.2;
+}
+.step-desc {
+  font-size:1rem;
+  color:var(--parch3);
+  font-style:italic;
+  line-height:1.6;
+  margin-bottom:1.8rem;
+}
+.step-desc strong { color:var(--gold3); font-style:normal; }
+
+/* ── ALERTS ── */
+.alert {
+  background:rgba(139,26,26,.2);
+  border:1px solid rgba(192,57,43,.5);
+  color:#e89090;
+  padding:.65rem 1rem;
+  font-size:.9rem;
+  border-radius:2px;
+  margin-bottom:1rem;
+  display:none;
+  animation:slideUp .3s ease;
+}
+.alert.show { display:block; }
+
+/* ── FIELDS ── */
+.field { margin-bottom:1.4rem; }
+label {
+  display:block;
+  font-family:'Cinzel',serif;
+  font-size:.72rem;
+  color:var(--gold);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-bottom:.45rem;
+}
+input[type=text], input[type=number], select, textarea {
+  width:100%;
+  background:rgba(8,5,2,.85);
+  border:1px solid rgba(184,134,11,.4);
+  color:var(--parch);
+  padding:.75rem 1rem;
+  font-family:'IM Fell English',serif;
+  font-size:1.05rem;
+  border-radius:2px;
+  outline:none;
+  transition:all .3s ease;
+  -webkit-appearance:none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color:var(--gold2);
+  box-shadow:0 0 0 2px rgba(184,134,11,.2), inset 0 0 24px rgba(184,134,11,.04);
+  background:rgba(14,9,4,.9);
+}
+select option { background:#111; color:var(--parch); }
+
+/* ── BUTTONS ── */
+.btn {
+  font-family:'Cinzel',serif;
+  font-size:.8rem;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  padding:.8rem 2rem;
+  border:none;
+  border-radius:2px;
+  cursor:pointer;
+  transition:all .3s ease;
+  position:relative;
+  overflow:hidden;
+}
+.btn::before {
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.07) 0%,transparent 100%);
+  pointer-events:none;
+}
+.btn-main {
+  background:linear-gradient(135deg,#7a5c14 0%,#a07828 40%,#b89030 50%,#a07828 60%,#7a5c14 100%);
+  color:var(--ink);
+  border:1px solid var(--gold2);
+  width:100%;
+  margin-top:.3rem;
+  box-shadow:0 4px 24px rgba(184,134,11,.25), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.btn-main:hover {
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 40%,var(--gold3) 50%,var(--gold2) 60%,var(--gold) 100%);
+  box-shadow:0 6px 35px rgba(184,134,11,.45);
+  transform:translateY(-2px);
+}
+.btn-main:active { transform:translateY(0); }
+.btn-ghost {
+  background:transparent;
+  color:var(--parch3);
+  border:1px solid rgba(184,134,11,.3);
+  font-size:.72rem;
+  padding:.6rem 1.2rem;
+}
+.btn-ghost:hover { border-color:var(--gold);color:var(--gold2); }
+.btn-row { display:flex;gap:.8rem;margin-top:.4rem; }
+.btn-row .btn { flex:1; }
+.btn-red {
+  background:linear-gradient(135deg,#5a1010,#8b1a1a);
+  color:#f0c0c0;border:1px solid rgba(192,57,43,.6);
+}
+.btn-red:hover { background:linear-gradient(135deg,#8b1a1a,#c0392b); }
+
+/* ── PROF DISPLAY ── */
+.prof-badge {
+  display:flex;align-items:center;justify-content:center;gap:1.5rem;
+  background:rgba(184,134,11,.06);
+  border:1px solid rgba(184,134,11,.2);
+  border-radius:3px;
+  padding:1.2rem;
+  margin-top:1rem;
+}
+.prof-number {
+  font-family:'Cinzel Decorative',serif;
+  font-size:3rem;
+  color:var(--gold3);
+  text-shadow:0 0 30px var(--glows);
+  line-height:1;
+}
+.prof-info { text-align:left; }
+.prof-info .label {
+  font-family:'Cinzel',serif;
+  font-size:.65rem;color:var(--gold);
+  letter-spacing:.2em;text-transform:uppercase;
+  display:block;margin-bottom:.2rem;
+}
+.prof-info .desc { font-size:.85rem;color:var(--parch3);font-style:italic;line-height:1.4; }
+
+/* ── SELECTION GRIDS ── */
+.sel-grid {
+  display:grid;
+  gap:.5rem;
+  margin-bottom:1.4rem;
+}
+.sel-grid-3 { grid-template-columns:repeat(3,1fr); }
+.sel-grid-4 { grid-template-columns:repeat(4,1fr); }
+.sel-grid-auto { grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); }
+
+.sel-card {
+  background:rgba(8,5,2,.85);
+  border:1px solid rgba(184,134,11,.3);
+  color:var(--parch3);
+  padding:.7rem .5rem;
+  font-family:'Cinzel',serif;
+  font-size:.68rem;
+  letter-spacing:.04em;
+  text-align:center;
+  cursor:pointer;
+  border-radius:2px;
+  transition:all .25s ease;
+  line-height:1.4;
+}
+.sel-card:hover {
+  border-color:var(--gold2);color:var(--parch);
+  background:rgba(184,134,11,.09);
+}
+.sel-card.selected {
+  background:linear-gradient(135deg,rgba(184,134,11,.18),rgba(184,134,11,.1));
+  border-color:var(--gold3);
+  color:var(--gold3);
+  box-shadow:0 0 18px rgba(184,134,11,.2), inset 0 0 20px rgba(184,134,11,.05);
+}
+.sel-card .ic { font-size:1.1rem;display:block;margin-bottom:.25rem; }
+.sel-card .sub { font-size:.58rem;color:rgba(212,191,136,.5);display:block;margin-top:.2rem;font-family:'IM Fell English',serif;font-style:italic; }
+.sel-card.selected .sub { color:rgba(240,192,64,.5); }
+
+/* ── CLASS DESCRIPTION BOX ── */
+.class-desc-box {
+  background:rgba(184,134,11,.04);
+  border:1px solid rgba(184,134,11,.15);
+  border-left:3px solid var(--gold);
+  padding:1rem 1.2rem;
+  border-radius:0 2px 2px 0;
+  margin-bottom:1.2rem;
+  display:none;
+  animation:slideUp .3s ease;
+}
+.class-desc-box.show { display:block; }
+.class-desc-box .cd-title {
+  font-family:'Cinzel',serif;
+  font-size:.85rem;color:var(--gold2);
+  margin-bottom:.4rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.class-desc-box .cd-body {
+  font-size:.88rem;color:var(--parch3);
+  font-style:italic;line-height:1.6;
+}
+.class-desc-box .cd-stats {
+  display:flex;gap:1rem;flex-wrap:wrap;
+  margin-top:.7rem;
+  padding-top:.7rem;
+  border-top:1px solid rgba(184,134,11,.15);
+}
+.cd-stat { font-size:.72rem;color:var(--parch3); }
+.cd-stat strong { color:var(--gold2);font-family:'Cinzel',serif; }
+
+/* ── RACE TRAIT BOX ── */
+.race-trait-box {
+  background:rgba(184,134,11,.04);
+  border:1px solid rgba(184,134,11,.15);
+  padding:1rem 1.2rem;
+  border-radius:2px;
+  margin-bottom:1.2rem;
+  display:none;
+  animation:slideUp .3s ease;
+}
+.race-trait-box.show { display:block; }
+.race-trait-box .rt-title {
+  font-family:'Cinzel',serif;font-size:.85rem;
+  color:var(--gold2);margin-bottom:.6rem;
+}
+.race-trait-box .rt-traits {
+  display:flex;gap:.5rem;flex-wrap:wrap;
+}
+.rt-pill {
+  background:rgba(184,134,11,.12);
+  border:1px solid rgba(184,134,11,.25);
+  padding:.25rem .65rem;
+  font-size:.7rem;
+  font-family:'Cinzel',serif;
+  color:var(--gold2);
+  border-radius:20px;
+}
+.rt-pill.bonus { background:rgba(139,26,26,.2);border-color:rgba(192,57,43,.4);color:#e0a0a0; }
+.rt-desc {
+  font-size:.82rem;color:var(--parch3);
+  font-style:italic;line-height:1.5;
+  margin-top:.6rem;
+}
+
+/* ── CONFIRM BOX ── */
+.confirm-box {
+  background:rgba(139,26,26,.1);
+  border:1px solid rgba(192,57,43,.25);
+  border-radius:3px;
+  padding:1.3rem 1.5rem;
+  margin-bottom:1.5rem;
+  text-align:center;
+}
+.confirm-box .big-name {
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1.2rem,4vw,2rem);
+  color:var(--gold3);
+  text-shadow:0 0 20px var(--glows);
+  display:block;
+  margin-bottom:.4rem;
+}
+.confirm-box p { font-size:1rem;color:var(--parch3);line-height:1.5; }
+
+/* ── ANTECEDENTE ── */
+.bg-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:.5rem; margin-bottom:1.2rem; }
+
+/* ── TENDENCIA ── */
+.tend-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.2rem; }
+
+/* ── DICE SECTION ── */
+.dice-section { margin-bottom:1.2rem; }
+
+.roll-mode-tabs {
+  display:flex;gap:.5rem;margin-bottom:1.2rem;
+}
+.rmt {
+  flex:1;padding:.55rem;
+  background:rgba(8,5,2,.85);
+  border:1px solid rgba(184,134,11,.25);
+  color:var(--parch3);
+  font-family:'Cinzel',serif;font-size:.68rem;
+  letter-spacing:.08em;text-align:center;
+  cursor:pointer;border-radius:2px;
+  transition:all .25s ease;
+}
+.rmt.active {
+  background:rgba(184,134,11,.15);
+  border-color:var(--gold2);color:var(--gold2);
+}
+
+.roll-panel { display:none; }
+.roll-panel.active { display:block; animation:slideUp .3s ease; }
+
+.point-buy-grid {
+  display:grid;gap:.6rem;
+  margin-bottom:1rem;
+}
+.pb-row {
+  display:flex;align-items:center;gap:.8rem;
+  padding:.6rem .8rem;
+  background:rgba(8,5,2,.8);
+  border:1px solid rgba(184,134,11,.1);
+  border-radius:2px;
+}
+.pb-name { font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold);width:90px;flex-shrink:0; }
+.pb-controls { display:flex;align-items:center;gap:.5rem;flex:1; }
+.pb-btn {
+  width:28px;height:28px;
+  background:rgba(184,134,11,.15);
+  border:1px solid rgba(184,134,11,.35);
+  color:var(--gold2);
+  font-size:1rem;
+  cursor:pointer;
+  border-radius:2px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s ease;
+  font-family:'Cinzel',serif;
+  flex-shrink:0;
+}
+.pb-btn:hover { background:rgba(184,134,11,.3);color:var(--gold3); }
+.pb-val {
+  font-family:'Cinzel Decorative',serif;
+  font-size:1.3rem;color:var(--parch);
+  min-width:28px;text-align:center;
+}
+.pb-mod { font-family:'Cinzel',serif;font-size:.72rem;color:var(--parch3);min-width:30px; }
+.pb-cost { font-size:.65rem;color:rgba(184,134,11,.5);font-family:'Cinzel',serif; }
+.pb-points-left {
+  text-align:center;
+  padding:.7rem;
+  font-family:'Cinzel',serif;font-size:.8rem;
+  color:var(--gold);
+  background:rgba(184,134,11,.05);
+  border:1px solid rgba(184,134,11,.15);
+  border-radius:2px;
+  margin-bottom:1rem;
+}
+.pb-points-left span {
+  font-family:'Cinzel Decorative',serif;
+  font-size:1.4rem;color:var(--gold3);
+  display:inline-block;
+  text-shadow:0 0 15px var(--glows);
+  margin:0 .3rem;
+}
+
+.std-array-grid {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;
+  margin-bottom:1rem;
+}
+.std-row {
+  background:rgba(8,5,2,.8);
+  border:1px solid rgba(184,134,11,.15);
+  border-radius:2px;
+  padding:.6rem .5rem;
+}
+.std-row label { font-size:.62rem;margin-bottom:.3rem; }
+.std-row select { font-size:.9rem;padding:.4rem .6rem; }
+
+.roll-log {
+  margin-top:1rem;
+}
+.roll-attr-row {
+  display:flex;align-items:center;gap:.6rem;
+  padding:.5rem .7rem;
+  background:rgba(8,5,2,.8);
+  border:1px solid rgba(184,134,11,.08);
+  border-radius:2px;
+  margin-bottom:.4rem;
+  transition:all .3s ease;
+}
+.roll-attr-row:hover { border-color:rgba(184,134,11,.2); }
+.ra-name { font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);width:38px;flex-shrink:0; }
+.ra-dice { display:flex;gap:.25rem;flex:1;flex-wrap:wrap; }
+
+.die {
+  width:34px;height:34px;
+  background:rgba(20,12,6,.9);
+  border:1px solid rgba(184,134,11,.3);
+  border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;
+  color:var(--parch);
+  transition:all .3s ease;
+}
+.die.kept { border-color:var(--gold2);color:var(--gold3);box-shadow:0 0 8px rgba(184,134,11,.25); }
+.die.dropped { opacity:.28;border-color:rgba(192,57,43,.3);color:#c05050;text-decoration:line-through;transform:scale(.82); }
+.die.rolling { animation:dieAnim .12s ease infinite; }
+@keyframes dieAnim {
+  0%{transform:rotate(-8deg) scale(1.08);}
+  50%{transform:rotate(8deg) scale(.94);}
+  100%{transform:rotate(-8deg) scale(1.08);}
+}
+
+.ra-total {
+  font-family:'Cinzel Decorative',serif;
+  font-size:1.25rem;color:var(--gold3);
+  min-width:28px;text-align:right;
+  text-shadow:0 0 10px var(--glows);
+}
+.ra-mod { font-family:'Cinzel',serif;font-size:.7rem;color:var(--parch3);min-width:36px;text-align:right; }
+
+.roll-msg {
+  text-align:center;
+  font-family:'Cinzel',serif;font-size:.72rem;
+  color:var(--parch3);letter-spacing:.12em;
+  margin-bottom:.8rem;opacity:.8;
+}
+
+/* ── BOUNCE LOADING ── */
+.loading-dice {
+  display:flex;justify-content:center;gap:.6rem;padding:1.5rem;
+}
+.ld {
+  width:32px;height:32px;
+  background:var(--bg3);
+  border:1px solid rgba(184,134,11,.3);
+  border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold);
+  animation:bounce .6s ease infinite;
+}
+.ld:nth-child(2){animation-delay:.12s;}
+.ld:nth-child(3){animation-delay:.24s;}
+.ld:nth-child(4){animation-delay:.36s;}
+@keyframes bounce{
+  0%,100%{transform:translateY(0);border-color:rgba(184,134,11,.3);}
+  50%{transform:translateY(-8px);border-color:var(--gold2);box-shadow:0 8px 16px rgba(184,134,11,.3);}
+}
+
+/* ── FICHA FINAL ── */
+.sheet-wrap {
+  position:relative;
+}
+
+.sheet-header {
+  text-align:center;
+  margin-bottom:1.8rem;
+  padding-bottom:1.2rem;
+  border-bottom:1px solid rgba(184,134,11,.2);
+}
+.sheet-char-name {
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1.5rem,5vw,2.5rem);
+  color:var(--parch);
+  text-shadow:0 0 40px var(--glows),0 2px 6px rgba(0,0,0,.8);
+  line-height:1.1;
+  margin-bottom:.3rem;
+}
+.sheet-player {
+  font-family:'Cinzel',serif;font-size:.72rem;
+  color:var(--parch3);letter-spacing:.2em;text-transform:uppercase;opacity:.6;
+}
+
+.sheet-meta {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;
+  margin-bottom:1.5rem;
+}
+@media(max-width:480px){.sheet-meta{grid-template-columns:repeat(2,1fr);}}
+
+.meta-tile {
+  background:rgba(8,5,2,.85);
+  border:1px solid rgba(184,134,11,.2);
+  padding:.8rem .6rem;
+  text-align:center;
+  border-radius:2px;
+  transition:all .3s ease;
+}
+.meta-tile:hover { border-color:rgba(184,134,11,.4); }
+.meta-tile .mv {
+  font-family:'Cinzel',serif;font-size:.88rem;
+  color:var(--gold2);display:block;
+  margin-bottom:.2rem;text-transform:capitalize;
+}
+.meta-tile .mk {
+  font-size:.58rem;color:rgba(212,191,136,.5);
+  letter-spacing:.18em;text-transform:uppercase;
+}
+
+.section-head {
+  font-family:'Cinzel',serif;font-size:.72rem;
+  color:var(--gold);letter-spacing:.25em;text-transform:uppercase;
+  margin-bottom:1rem;opacity:.85;
+  display:flex;align-items:center;gap:.6rem;
+}
+.section-head::after {
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,rgba(184,134,11,.3),transparent);
+}
+
+.prof-bar {
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(184,134,11,.06);
+  border:1px solid rgba(184,134,11,.2);
+  padding:.9rem 1.4rem;
+  border-radius:2px;
+  margin-bottom:1.5rem;
+}
+.prof-bar .plabel { font-family:'Cinzel',serif;font-size:.72rem;color:var(--parch3);letter-spacing:.12em;text-transform:uppercase; }
+.prof-bar .pval {
+  font-family:'Cinzel Decorative',serif;font-size:2.2rem;
+  color:var(--gold3);text-shadow:0 0 20px var(--glows);
+}
+
+/* ── ATTR CARDS ── */
+.attrs-grid {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;
+  margin-bottom:1.5rem;
+}
+@media(max-width:400px){.attrs-grid{grid-template-columns:repeat(2,1fr);}}
+
+.attr-card {
+  background:linear-gradient(135deg,rgba(14,9,4,.97),rgba(20,13,5,.95));
+  border:1px solid rgba(184,134,11,.35);
+  border-radius:3px;
+  padding:1.1rem .6rem .9rem;
+  text-align:center;
+  position:relative;
+  transition:all .35s ease;
+  animation:cardIn .6s ease both;
+  cursor:default;
+}
+.attr-card::before {
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(184,134,11,.05) 0%,transparent 50%);
+  border-radius:3px;
+}
+.attr-card:hover {
+  border-color:var(--gold2);
+  box-shadow:0 0 24px rgba(184,134,11,.18);
+  transform:translateY(-3px);
+}
+@keyframes cardIn {
+  from{opacity:0;transform:scale(.88) translateY(12px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+.attr-card:nth-child(1){animation-delay:.08s;}
+.attr-card:nth-child(2){animation-delay:.16s;}
+.attr-card:nth-child(3){animation-delay:.24s;}
+.attr-card:nth-child(4){animation-delay:.32s;}
+.attr-card:nth-child(5){animation-delay:.40s;}
+.attr-card:nth-child(6){animation-delay:.48s;}
+
+.ac-label {
+  font-family:'Cinzel',serif;font-size:.6rem;
+  color:var(--gold);letter-spacing:.18em;text-transform:uppercase;
+  margin-bottom:.35rem;display:block;
+}
+.ac-value {
+  font-family:'Cinzel Decorative',serif;font-size:2.4rem;
+  color:var(--parch);line-height:1;
+  text-shadow:0 2px 8px rgba(0,0,0,.5);
+}
+.ac-mod {
+  font-family:'Cinzel',serif;font-size:.9rem;
+  color:var(--gold3);margin-top:.25rem;display:block;
+}
+.ac-base {
+  font-size:.62rem;color:rgba(212,191,136,.35);
+  font-style:italic;margin-top:.1rem;
+  display:block;
+}
+.ac-bonus-badge {
+  position:absolute;top:-5px;right:-5px;
+  background:var(--red);
+  border:1px solid rgba(192,57,43,.5);
+  color:#f0b0b0;
+  font-family:'Cinzel',serif;font-size:.55rem;
+  padding:.1rem .35rem;
+  border-radius:10px;
+}
+
+/* ── RACE TRAITS DISPLAY ── */
+.traits-list {
+  display:flex;gap:.4rem;flex-wrap:wrap;
+  margin-bottom:1.2rem;
+}
+.trait-pill {
+  background:rgba(184,134,11,.1);
+  border:1px solid rgba(184,134,11,.25);
+  padding:.28rem .7rem;
+  font-family:'Cinzel',serif;font-size:.65rem;
+  color:var(--gold2);border-radius:20px;
+  transition:all .2s ease;
+}
+.trait-pill:hover { background:rgba(184,134,11,.18);border-color:var(--gold2); }
+.trait-pill.red { background:rgba(139,26,26,.15);border-color:rgba(192,57,43,.3);color:#d09090; }
+
+/* ── HP / SPEED / SAVE BOXES ── */
+.combat-grid {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;
+  margin-bottom:1.5rem;
+}
+.combat-tile {
+  background:rgba(139,26,26,.08);
+  border:1px solid rgba(192,57,43,.2);
+  border-radius:2px;
+  padding:.8rem .5rem;
+  text-align:center;
+}
+.ct-val {
+  font-family:'Cinzel Decorative',serif;font-size:1.6rem;
+  color:#e0a0a0;display:block;line-height:1;
+  text-shadow:0 0 15px rgba(192,57,43,.3);
+}
+.ct-label { font-size:.6rem;color:rgba(192,57,43,.7);letter-spacing:.15em;text-transform:uppercase;font-family:'Cinzel',serif; }
+
+/* ── SAVING THROWS ── */
+.saves-grid {
+  display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem;
+  margin-bottom:1.5rem;
+}
+.save-row {
+  display:flex;align-items:center;gap:.6rem;
+  padding:.45rem .7rem;
+  background:rgba(8,5,2,.7);
+  border:1px solid rgba(184,134,11,.08);
+  border-radius:2px;
+}
+.save-dot {
+  width:10px;height:10px;
+  border-radius:50%;
+  border:1px solid rgba(184,134,11,.4);
+  background:transparent;
+  flex-shrink:0;
+  transition:all .2s;
+}
+.save-dot.prof { background:var(--gold2);border-color:var(--gold3);box-shadow:0 0 6px var(--glows); }
+.save-name { font-family:'Cinzel',serif;font-size:.68rem;color:var(--parch3);flex:1; }
+.save-val { font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold2);min-width:28px;text-align:right; }
+
+/* ── EXTRAS SECTION ── */
+.extras-cols {
+  display:grid;grid-template-columns:1fr 1fr;gap:1rem;
+  margin-bottom:1.5rem;
+}
+@media(max-width:480px){.extras-cols{grid-template-columns:1fr;}}
+
+.extra-box {
+  background:rgba(8,5,2,.7);
+  border:1px solid rgba(184,134,11,.12);
+  border-radius:2px;
+  padding:.9rem 1rem;
+}
+.extra-box .eb-title {
+  font-family:'Cinzel',serif;font-size:.68rem;
+  color:var(--gold);letter-spacing:.15em;text-transform:uppercase;
+  margin-bottom:.5rem;
+}
+.extra-box .eb-val {
+  font-size:.88rem;color:var(--parch3);line-height:1.5;
+  font-style:italic;
+}
+.extra-box .eb-val strong { color:var(--parch);font-style:normal; }
+
+/* ── NARRATIVE QUOTE ── */
+.char-quote {
+  background:rgba(184,134,11,.04);
+  border-left:3px solid rgba(184,134,11,.35);
+  padding:.9rem 1.2rem;
+  margin-bottom:1.5rem;
+  font-style:italic;
+  font-size:.9rem;
+  color:var(--parch3);
+  line-height:1.6;
+}
+.char-quote cite {
+  display:block;
+  margin-top:.5rem;
+  font-family:'Cinzel',serif;font-size:.65rem;
+  color:var(--gold);letter-spacing:.15em;
+  text-transform:uppercase;
+  font-style:normal;opacity:.7;
+}
+
+/* ── ACTIONS ── */
+.sheet-actions {
+  display:flex;gap:.8rem;flex-wrap:wrap;
+  margin-top:2rem;
+}
+.sheet-actions .btn { flex:1;min-width:120px; }
+
+/* ── TOOLTIP ── */
+.tooltip-wrap { position:relative;display:inline-block; }
+.tooltip-tip {
+  position:absolute;
+  bottom:calc(100% + 8px);left:50%;
+  transform:translateX(-50%);
+  background:rgba(14,9,4,.97);
+  border:1px solid rgba(184,134,11,.3);
+  color:var(--parch3);
+  font-size:.72rem;
+  padding:.4rem .7rem;
+  border-radius:2px;
+  white-space:nowrap;
+  pointer-events:none;
+  opacity:0;transition:opacity .2s;
+  font-family:'IM Fell English',serif;
+  z-index:100;
+  box-shadow:0 4px 12px rgba(0,0,0,.5);
+}
+.tooltip-wrap:hover .tooltip-tip { opacity:1; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:520px){
+  .panel { padding:1.8rem 1.1rem; }
+  .sel-grid-4 { grid-template-columns:repeat(2,1fr); }
+  .attrs-grid { grid-template-columns:repeat(2,1fr); }
+  .saves-grid { grid-template-columns:1fr; }
+  .combat-grid { grid-template-columns:repeat(2,1fr); }
+  .std-array-grid { grid-template-columns:repeat(2,1fr); }
+}
+@media(max-width:380px){
+  .sel-grid-3 { grid-template-columns:repeat(2,1fr); }
+}
+
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="dnd-logo">Dungeons &amp; Dragons · 5ª Edição</div>
+    <h1 class="site-title"><span>Ficha</span> de Personagem</h1>
+    <p class="site-sub">Livro do Jogador · Sistema Oficial</p>
+  </header>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-steps" id="progressSteps"></div>
+    <div class="progress-label" id="progressLabel">Etapa 1 de 8</div>
+  </div>
+
+  <div class="divider"><div class="div-line"></div><div class="div-gem"></div><div class="div-line"></div></div>
+
+  <!-- PANEL -->
+  <div class="panel">
+    <span class="panel-corner">✦</span>
+
+    <!-- ══ STEP 1: JOGADOR ══ -->
+    <div class="step active" id="s1">
+      <p class="step-eyebrow">Início da Jornada</p>
+      <h2 class="step-title">Bem-vindo à sua Ficha Automática!</h2>
+      <p class="step-desc">Para começarmos, diga o nome do jogador que controlará este herói.</p>
+      <div class="alert" id="e1">Por favor, insira o nome do jogador.</div>
+      <div class="field">
+        <label>Nome do Jogador</label>
+        <input type="text" id="iJogador" placeholder="Seu nome..." autocomplete="off" maxlength="60">
+      </div>
+      <button class="btn btn-main" onclick="go(2)">Prosseguir →</button>
+    </div>
+
+    <!-- ══ STEP 2: PERSONAGEM ══ -->
+    <div class="step" id="s2">
+      <p class="step-eyebrow">Identidade do Herói</p>
+      <h2 class="step-title" id="t2">Olá, Aventureiro!</h2>
+      <p class="step-desc">Agora, qual o nome do seu personagem? Este será o nome pelo qual os outros aventureiros e criaturas do mundo o conhecerão.</p>
+      <div class="alert" id="e2">Por favor, insira o nome do personagem.</div>
+      <div class="field">
+        <label>Nome do Personagem</label>
+        <input type="text" id="iPers" placeholder="Nome do herói..." autocomplete="off" maxlength="60">
+      </div>
+      <button class="btn btn-main" onclick="go(3)">Continuar →</button>
+    </div>
+
+    <!-- ══ STEP 3: NÍVEL ══ -->
+    <div class="step" id="s3">
+      <p class="step-eyebrow">Experiência</p>
+      <h2 class="step-title">Nível do Personagem</h2>
+      <p class="step-desc">Qual o nível de <strong id="t3">seu personagem</strong>? Isso determina seu <strong>Bônus de Proficiência</strong> — adicionado a ataques, testes de resistência e perícias em que você é proficiente.</p>
+      <div class="alert" id="e3">Insira um nível válido entre 1 e 20.</div>
+      <div class="field">
+        <label>Nível (1–20)</label>
+        <input type="number" id="iNivel" min="1" max="20" placeholder="Ex: 1">
+      </div>
+      <div id="profBox" style="display:none">
+        <div class="prof-badge">
+          <div class="prof-number" id="profNum">+2</div>
+          <div class="prof-info">
+            <span class="label">Bônus de Proficiência</span>
+            <span class="desc" id="profDesc">Níveis 1–4: +2</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-main" onclick="go(4)" style="margin-top:1rem">Continuar →</button>
+    </div>
+
+    <!-- ══ STEP 4: CLASSE ══ -->
+    <div class="step" id="s4">
+      <p class="step-eyebrow">Vocação</p>
+      <h2 class="step-title">Escolha sua Classe</h2>
+      <p class="step-desc">Sua classe é a definição principal do que seu personagem pode fazer — mais que uma profissão, é a sua vocação.</p>
+      <div class="alert" id="e4">Selecione uma classe para continuar.</div>
+      <div class="sel-grid sel-grid-auto" id="classeGrid"></div>
+      <div class="class-desc-box" id="classDescBox">
+        <div class="cd-title" id="cdTitle"></div>
+        <div class="cd-body" id="cdBody"></div>
+        <div class="cd-stats" id="cdStats"></div>
+      </div>
+      <button class="btn btn-main" onclick="go(4.5)">Confirmar Classe →</button>
+    </div>
+
+    <!-- ══ STEP 4.5: CONFIRMAR CLASSE ══ -->
+    <div class="step" id="s4b">
+      <p class="step-eyebrow">Confirmação</p>
+      <h2 class="step-title">Tem certeza?</h2>
+      <div class="confirm-box">
+        <span class="big-name" id="confirmaClasseNome"></span>
+        <p>Deseja mesmo seguir o caminho do <strong id="confirmaClasseText"></strong>?<br>Esta é a vocação que definirá sua jornada.</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-main" onclick="go(5)">✓ Sim, confirmar</button>
+        <button class="btn btn-ghost" onclick="voltarClasse()">← Escolher outra</button>
+      </div>
+    </div>
+
+    <!-- ══ STEP 5: RAÇA ══ -->
+    <div class="step" id="s5">
+      <p class="step-eyebrow">Ancestralidade</p>
+      <h2 class="step-title">Escolha sua Raça</h2>
+      <p class="step-desc">Sua raça determina traços inatos, bônus de habilidade e características que fazem parte da sua natureza desde o nascimento.</p>
+      <div class="alert" id="e5">Selecione uma raça para continuar.</div>
+      <div class="sel-grid sel-grid-auto" id="racaGrid"></div>
+      <div class="race-trait-box" id="raceTraitBox">
+        <div class="rt-title" id="rtTitle"></div>
+        <div class="rt-traits" id="rtPills"></div>
+        <div class="rt-desc" id="rtDesc"></div>
+      </div>
+      <button class="btn btn-main" onclick="go(6)">Confirmar Raça →</button>
+    </div>
+
+    <!-- ══ STEP 6: ANTECEDENTE ══ -->
+    <div class="step" id="s6">
+      <p class="step-eyebrow">História Pessoal</p>
+      <h2 class="step-title">Antecedente</h2>
+      <p class="step-desc">O antecedente descreve de onde você veio, sua ocupação original e seu lugar no mundo. Concede proficiências em perícias adicionais.</p>
+      <div class="alert" id="e6">Selecione um antecedente para continuar.</div>
+      <div class="bg-grid" id="bgGrid"></div>
+      <div class="class-desc-box" id="bgDescBox">
+        <div class="cd-title" id="bgTitle"></div>
+        <div class="cd-body" id="bgBody"></div>
+        <div class="cd-stats" id="bgStats"></div>
+      </div>
+      <button class="btn btn-main" onclick="go(7)">Continuar →</button>
+    </div>
+
+    <!-- ══ STEP 7: ATRIBUTOS ══ -->
+    <div class="step" id="s7">
+      <p class="step-eyebrow">Determinando Habilidades</p>
+      <h2 class="step-title">Valores de Habilidade</h2>
+      <p class="step-desc">As seis habilidades definem o que seu personagem pode fazer. Escolha um método para determiná-las.</p>
+      <div class="roll-mode-tabs">
+        <div class="rmt active" id="tab-roll" onclick="setMode('roll')">🎲 Rolar 4d6</div>
+        <div class="rmt" id="tab-std" onclick="setMode('std')">📋 Array Padrão</div>
+        <div class="rmt" id="tab-pb" onclick="setMode('pb')">⚖ Compra de Pontos</div>
+      </div>
+
+      <!-- ROLAR -->
+      <div class="roll-panel active" id="panel-roll">
+        <p style="font-size:.85rem;color:var(--parch3);font-style:italic;margin-bottom:.9rem;line-height:1.5;">Jogue 4d6 e descarte o menor resultado para cada habilidade. Este método permite tanto conjuntos equilibrados quanto assimétricos.</p>
+        <button class="btn btn-main" id="rollBtn" onclick="rolarAtributos()">🎲 Rolar os Dados</button>
+        <div id="rollLog" style="display:none;margin-top:1rem;"></div>
+        <div class="btn-row" style="margin-top:.8rem;display:none" id="rerollRow">
+          <button class="btn btn-ghost" onclick="rolarAtributos()">↺ Rolar Novamente</button>
+        </div>
+      </div>
+
+      <!-- ARRAY PADRÃO -->
+      <div class="roll-panel" id="panel-std">
+        <p style="font-size:.85rem;color:var(--parch3);font-style:italic;margin-bottom:.9rem;line-height:1.5;">Distribua os valores <strong style="color:var(--gold2)">15, 14, 13, 12, 10, 8</strong> pelas seis habilidades. Este método economiza tempo e cria personagens equilibrados.</p>
+        <div class="std-array-grid" id="stdGrid"></div>
+        <p id="stdWarn" style="display:none;color:#e89090;font-size:.8rem;text-align:center;margin-top:.5rem;">⚠ Cada valor deve ser usado exatamente uma vez.</p>
+      </div>
+
+      <!-- COMPRA DE PONTOS -->
+      <div class="roll-panel" id="panel-pb">
+        <p style="font-size:.85rem;color:var(--parch3);font-style:italic;margin-bottom:.9rem;line-height:1.5;">Você tem <strong style="color:var(--gold2)">27 pontos</strong> para distribuir. Valores entre 8 e 15. Cria personagens focados com controle total sobre suas habilidades.</p>
+        <div class="pb-points-left">Pontos restantes: <span id="pbLeft">27</span></div>
+        <div class="point-buy-grid" id="pbGrid"></div>
+      </div>
+
+      <button class="btn btn-main" style="margin-top:1rem" onclick="go(8)">Finalizar Personagem →</button>
+    </div>
+
+    <!-- ══ STEP 8: FICHA FINAL ══ -->
+    <div class="step" id="s8">
+      <div class="sheet-wrap">
+        <div class="divider"><div class="div-line"></div><div class="div-gem"></div><div class="div-line"></div></div>
+        <div class="sheet-header">
+          <div class="sheet-char-name" id="shCharName"></div>
+          <div class="sheet-player" id="shPlayer"></div>
+        </div>
+
+        <div class="sheet-meta" id="shMeta"></div>
+
+        <div class="divider div-sm"><div class="div-line"></div><div class="div-gem"></div><div class="div-line"></div></div>
+
+        <div id="shQuote" class="char-quote" style="display:none"></div>
+
+        <p class="section-head">Bônus de Proficiência</p>
+        <div class="prof-bar">
+          <span class="plabel">Bônus de Proficiência</span>
+          <span class="pval" id="shProf"></span>
+        </div>
+
+        <p class="section-head">Atributos Primários</p>
+        <div class="attrs-grid" id="shAttrs"></div>
+
+        <p class="section-head">Informações de Combate</p>
+        <div class="combat-grid" id="shCombat"></div>
+
+        <p class="section-head">Testes de Resistência</p>
+        <div class="saves-grid" id="shSaves"></div>
+
+        <p class="section-head">Traços Raciais</p>
+        <div class="traits-list" id="shTraits"></div>
+
+        <div class="extras-cols" id="shExtras"></div>
+
+        <div class="sheet-actions">
+          <button class="btn btn-ghost" onclick="restart()">⟳ Novo Personagem</button>
+          <button class="btn btn-main" onclick="printSheet()">🖨 Imprimir Ficha</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel -->
+</div><!-- /wrap -->
+
+<script>
+// ════════════════════════════════════════
+// DATA — extraído do Livro do Jogador 5e
+// ════════════════════════════════════════
+
+const CLASSES = {
+  bárbaro:    { ic:'🪓', dado:'d12', for_principal:['Força','Constituição'], tr:['Força','Constituição'],
+    armor:'Armaduras leves, médias e escudos', armas:'Armas simples, marciais',
+    desc:'Feroz guerreiro primitivo que canaliza uma fúria incontrolável em combate. Sua raiva concede força e resiliência sobre-humanas.',
+    pericias:'Adestrar Animais, Atletismo, Intimidação, Natureza, Percepção, Sobrevivência (2 à escolha)' },
+  bardo:      { ic:'🎭', dado:'d8', for_principal:['Carisma','Destreza'], tr:['Destreza','Carisma'],
+    armor:'Armaduras leves', armas:'Armas simples, besta de mão, espada longa, rapieira, espada curta',
+    desc:'Mestre da canção e da magia, o bardo une música e feitiçaria para inspirar aliados, manipular mentes e curar ferimentos.',
+    pericias:'Qualquer três à sua escolha' },
+  bruxo:      { ic:'🌙', dado:'d8', for_principal:['Carisma','Constituição'], tr:['Sabedoria','Carisma'],
+    armor:'Armaduras leves', armas:'Armas simples',
+    desc:'Forjou um pacto com um ser poderoso de outro plano, ganhando poderes sobrenaturais em troca de serviço ou devoção.',
+    pericias:'Arcanismo, Enganação, História, Intimidação, Investigação, Natureza, Religião (2 à escolha)' },
+  clérigo:    { ic:'✝', dado:'d8', for_principal:['Sabedoria'], tr:['Sabedoria','Carisma'],
+    armor:'Armaduras leves, médias e escudos', armas:'Todas as armas simples',
+    desc:'Intermediário entre o divino e o mortal, o clérigo canaliza o poder de seu deus para curar, proteger e destruir.',
+    pericias:'História, Intuição, Medicina, Persuasão, Religião (2 à escolha)' },
+  druida:     { ic:'🌿', dado:'d8', for_principal:['Sabedoria'], tr:['Inteligência','Sabedoria'],
+    armor:'Armaduras leves, médias (sem metal) e escudos', armas:'Clavas, adagas, dardos, azagaias, maças, bordões, cimitarras, foices, fundas, lanças',
+    desc:'Guardião da natureza selvagem que conjura magia druídica e assume formas animais para proteger o equilíbrio natural.',
+    pericias:'Arcanismo, Adestrar Animais, Intuição, Medicina, Natureza, Percepção, Religião, Sobrevivência (2 à escolha)' },
+  feiticeiro: { ic:'🔮', dado:'d6', for_principal:['Carisma'], tr:['Constituição','Carisma'],
+    armor:'Nenhuma', armas:'Adagas, dardos, fundas, bordões, bestas leves',
+    desc:'A magia flui em seu sangue como herança inata. Sem necessidade de estudo, você conjura feitiços pela força de sua personalidade.',
+    pericias:'Arcanismo, Enganação, Intuição, Intimidação, Persuasão, Religião (2 à escolha)' },
+  guerreiro:  { ic:'⚔', dado:'d10', for_principal:['Força','Destreza'], tr:['Força','Constituição'],
+    armor:'Todas as armaduras e escudos', armas:'Armas simples, marciais',
+    desc:'Mestre do combate físico que domina inúmeras técnicas de luta, com resistência e versatilidade incomparáveis em batalha.',
+    pericias:'Acrobacia, Adestrar Animais, Atletismo, História, Intuição, Intimidação, Percepção, Sobrevivência (2 à escolha)' },
+  ladino:     { ic:'🗡', dado:'d8', for_principal:['Destreza'], tr:['Destreza','Inteligência'],
+    armor:'Armaduras leves', armas:'Armas simples, besta de mão, espada longa, rapieira, espada curta',
+    desc:'Especialista em furtividade, truques e ataques surpresa. Um ladino usa seu engenho para explorar fraquezas do inimigo.',
+    pericias:'Acrobacia, Atletismo, Enganação, Furtividade, Intuição, Intimidação, Investigação, Percepção, Atuação, Persuasão, Prestidigitação, Arcanismo (4 à escolha)' },
+  mago:       { ic:'✨', dado:'d6', for_principal:['Inteligência'], tr:['Inteligência','Sabedoria'],
+    armor:'Nenhuma', armas:'Adagas, dardos, fundas, bordões, bestas leves',
+    desc:'Erudito das artes arcanas que estuda a magia com rigor académico, acumulando um arsenal de feitiços de imenso poder.',
+    pericias:'Arcanismo, História, Intuição, Investigação, Medicina, Religião (2 à escolha)' },
+  monge:      { ic:'👊', dado:'d8', for_principal:['Destreza','Sabedoria'], tr:['Força','Destreza'],
+    armor:'Nenhuma', armas:'Armas simples, espadas curtas',
+    desc:'Mestre das artes marciais que canaliza ki — energia mística interior — para golpes devastadores e façanhas sobre-humanas.',
+    pericias:'Acrobacia, Atletismo, História, Intuição, Religião, Furtividade (2 à escolha)' },
+  paladino:   { ic:'🛡', dado:'d10', for_principal:['Força','Carisma'], tr:['Sabedoria','Carisma'],
+    armor:'Todas as armaduras e escudos', armas:'Armas simples, marciais',
+    desc:'Guerreiro sagrado vinculado por um juramento divino. Combina habilidade marcial com magia divina e uma aura de proteção.',
+    pericias:'Atletismo, Intuição, Intimidação, Medicina, Persuasão, Religião (2 à escolha)' },
+  patrulheiro:{ ic:'🏹', dado:'d10', for_principal:['Destreza','Sabedoria'], tr:['Força','Destreza'],
+    armor:'Armaduras leves, médias e escudos', armas:'Armas simples, marciais',
+    desc:'Caçador e rastreador selvagem que conjura magia da natureza. Especialista em terrenos específicos e tipos de inimigos.',
+    pericias:'Adestrar Animais, Atletismo, Intuição, Investigação, Natureza, Percepção, Furtividade, Sobrevivência (3 à escolha)' }
+};
+
+const RACAS = {
+  anão:       { ic:'⛏', bonus:{con:2,sab:1}, vel:'7,5m', visao:'Escuro 18m',
+    traits:['Resiliência Anã','Treinamento em Combate','Prof. em Ferramentas','Especialização em Rochas'],
+    desc:'Anões tornam-se maduros na mesma proporção que os humanos, mas são considerados jovens até os 50 anos. Em média vivem 350 anos. Seu deslocamento não é reduzido por armadura pesada.' },
+  elfo:       { ic:'🍃', bonus:{des:2,con:2}, vel:'9m', visao:'Escuro 18m',
+    traits:['Sentidos Aguçados','Ancestral Feérico','Transe (4h = 8h de sono)','Proficiência em Percepção'],
+    desc:'Elfos atingem a maturidade por volta dos 100 anos e podem viver até 750 anos. Amam liberdade e expressão pessoal, inclinando-se para o caos.' },
+  humano:     { ic:'👤', bonus:{for:1,des:1,con:1,inte:1,sab:1,car:1}, vel:'9m', visao:'Normal',
+    traits:['+1 em todos os atributos','Nenhum traço especial','Versatilidade máxima','Idioma extra'],
+    desc:'Humanos chegam à maturidade no final da adolescência e raramente vivem mais de um século. São a raça mais adaptável e ambiciosa.' },
+  'meio-orc': { ic:'💪', bonus:{for:2,con:1}, vel:'9m', visao:'Escuro 18m',
+    traits:['Visão no Escuro','Ameaçador (Proficiência em Intimidação)','Resistência Implacável','Ataques Selvagens'],
+    desc:'Fruto da união entre humanos e orcs. Possuem entre 1,80m e 2,10m e carregam a fúria de Gruumsh em seu sangue, mas não são maus por natureza.' },
+  'meio-elfo':{ ic:'🌟', bonus:{car:2,des:1}, vel:'9m', visao:'Escuro 18m',
+    traits:['Visão no Escuro','Ancestral Feérico','Versatilidade em Perícias (+2 perícias à escolha)'],
+    desc:'Meio-elfos atingem a maturidade aos 20 anos mas raramente ultrapassam 180 anos. Combinam ambição humana com sutileza élfica.' },
+  tifling:    { ic:'😈', bonus:{inte:1,car:2}, vel:'9m', visao:'Escuro 18m',
+    traits:['Visão no Escuro','Resistência Infernal (fogo)','Legado Infernal','Taumaturgia (truque)'],
+    desc:'Descendentes de humanos com sangue diabólico de Asmodeus. Suas vidas são marcadas por suspeita e preconceito, mas muitos se tornam heróis.' },
+  halfling:   { ic:'🍀', bonus:{des:2,car:1}, vel:'7,5m', visao:'Normal',
+    traits:['Sorte (rerolar 1s)','Bravura (vantagem vs susto)','Agilidade Halfling','Pés Leves (Furtividade)'],
+    desc:'Halflings atingem a maturidade aos 20 anos e vivem até 150. Possuem uns 90cm, são resilientes, leais e dotados de uma sorte sobrenatural.' },
+  gnomo:      { ic:'🔬', bonus:{des:1,inte:2}, vel:'7,5m', visao:'Escuro 18m',
+    traits:['Visão no Escuro','Esperteza Gnômica (vantagem em TR mágicos)','Comunicação com Animais Menores'],
+    desc:'Gnomos amadurecem como humanos e podem viver entre 350 e 500 anos. São naturalmente curiosos, alegres e inclinados ao bem.' },
+  draconato:  { ic:'🐉', bonus:{for:2,car:1}, vel:'9m', visao:'Normal',
+    traits:['Ancestral Dracônico','Arma de Sopro (2d6 de dano)','Resistência a Dano dracônico'],
+    desc:'Draconatos crescem rapidamente, atingindo maturidade aos 15 anos e vivem até 80. Tendem aos extremos na guerra cósmica entre o bem e o mal.' }
+};
+
+const ANTECEDENTES = {
+  acólito:         { ic:'🕯', pericias:'Intuição, Religião', idiomas:'Dois à sua escolha', desc:'Você viveu a serviço de um templo de algum deus ou panteão. Realizava rituais e conduzia fiéis à adoração divina.' },
+  artesão:         { ic:'🔨', pericias:'Intuição, Persuasão', idiomas:'Um à sua escolha', desc:'Você foi membro de uma guilda de artesãos. Seu ofício lhe garante hospitality e acesso à rede da guilda.' },
+  artista:         { ic:'🎵', pericias:'Acrobacia, Atuação', idiomas:'—', desc:'Você é um artista habilidoso — cantor, dançarino, ator ou músico. Palcos e tavernas são seu habitat natural.' },
+  criminoso:       { ic:'🗝', pericias:'Enganação, Furtividade', idiomas:'—', desc:'Você tem um histórico de contravenções e mantém contato com o submundo do crime. Sobreviveu desprezando a lei.' },
+  eremita:         { ic:'📿', pericias:'Medicina, Religião', idiomas:'Um à sua escolha', desc:'Você viveu em reclusão — seja em meditação, fuga da sociedade ou serviço a uma causa espiritual solitária.' },
+  forasteiro:      { ic:'🌲', pericias:'Atletismo, Sobrevivência', idiomas:'Um à sua escolha', desc:'Você cresceu na área selvagem, longe da civilização. Testemunhou migrações de manadas e sobreviveu a climas extremos.' },
+  'herói do povo': { ic:'⚒', pericias:'Adestrar Animais, Sobrevivência', idiomas:'—', desc:'Você veio do meio do povo comum e possui um evento definidor que o marcou para grandes feitos contra a tirania.' },
+  marinheiro:      { ic:'⚓', pericias:'Atletismo, Percepção', idiomas:'—', desc:'Você navegou em um navio por anos. O mar é sua segunda casa e os ventos suas rotas mais conhecidas.' },
+  nobre:           { ic:'👑', pericias:'História, Persuasão', idiomas:'Um à sua escolha', desc:'Você nasceu ou foi adotado em uma família nobre. Privilégio e responsabilidade moldam sua visão do mundo.' },
+  órfão:           { ic:'🏚', pericias:'Furtividade, Prestidigitação', idiomas:'—', desc:'Você cresceu nas ruas, aprendendo a sobreviver por conta própria desde cedo. Suas habilidades vêm da necessidade.' },
+  sábio:           { ic:'📚', pericias:'Arcanismo, História', idiomas:'Dois à sua escolha', desc:'Você passou anos aprendendo sobre o conhecimento do multiverso. Seus estudos fizeram de você um mestre em sua área.' },
+  soldado:         { ic:'🪖', pericias:'Atletismo, Intimidação', idiomas:'—', desc:'Você fez parte de um exército organizado. A disciplina militar moldou sua postura e suas habilidades de combate.' }
+};
+
+const TENDENCIAS = ['Leal e bom','Neutro e bom','Caótico e bom','Leal e neutro','Neutro','Caótico e neutro','Leal e mau','Neutro e mau','Caótico e mau'];
+
+// Atributos
+const ATTRS    = ['for','des','con','inte','sab','car'];
+const ANAMES   = { for:'Força', des:'Destreza', con:'Constituição', inte:'Inteligência', sab:'Sabedoria', car:'Carisma' };
+const ASHORT   = { for:'FOR', des:'DES', con:'CON', inte:'INT', sab:'SAB', car:'CAR' };
+const STD_ARR  = [15,14,13,12,10,8];
+const PB_COST  = {8:0,9:1,10:2,11:3,12:4,13:5,14:7,15:9};
+const PB_TOTAL = 27;
+
+// State
+const S = {
+  step:1, jogador:'', pers:'', nivel:1, profBonus:2,
+  classe:'', raca:'', antecedente:'', tendencia:'',
+  atributos:{for:8,des:8,con:8,inte:8,sab:8,car:8},
+  mode:'roll', stdAssign:{}, pbVals:{for:8,des:8,con:8,inte:8,sab:8,car:8},
+  rolled:false
+};
+
+const TOTAL_STEPS = 8;
+
+// ════════════════
+// INIT
+// ════════════════
+window.onload = () => {
+  buildClasseGrid();
+  buildRacaGrid();
+  buildBgGrid();
+  buildStdGrid();
+  buildPbGrid();
+  renderProgress();
+  // Enter keys
+  ['iJogador','iPers','iNivel'].forEach((id,i)=>{
+    document.getElementById(id).addEventListener('keydown',e=>{ if(e.key==='Enter') go([2,3,4][i]); });
+  });
+  document.getElementById('iNivel').addEventListener('input', liveNivel);
+};
+
+// ════════════════
+// PROGRESS
+// ════════════════
+function renderProgress(){
+  const bar = document.getElementById('progressSteps');
+  bar.innerHTML='';
+  for(let i=1;i<=TOTAL_STEPS;i++){
+    const d=document.createElement('div');
+    d.className='ps'+(i===S.step?' active':i<S.step?' done':'');
+    d.textContent=i;
+    bar.appendChild(d);
+  }
+  const labels=['Jogador','Personagem','Nível','Classe','Classe','Raça','Antecedente','Atributos','Ficha'];
+  document.getElementById('progressLabel').textContent=`Etapa ${S.step} de ${TOTAL_STEPS}`;
+}
+
+// ════════════════
+// NAVIGATION
+// ════════════════
+function showStep(id){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function go(n){
+  hideAllErrors();
+  if(n===2){
+    const v=document.getElementById('iJogador').value.trim();
+    if(!v){showErr('e1');return;}
+    S.jogador=v;
+    document.getElementById('t2').textContent=`Certo, ${v}!`;
+  }
+  if(n===3){
+    const v=document.getElementById('iPers').value.trim();
+    if(!v){showErr('e2');return;}
+    S.pers=v;
+    document.getElementById('t3').textContent=S.pers;
+  }
+  if(n===4){
+    const v=parseInt(document.getElementById('iNivel').value);
+    if(!v||v<1||v>20){showErr('e3');return;}
+    S.nivel=v; S.profBonus=calcProf(v);
+  }
+  if(n===4.5){
+    if(!S.classe){showErr('e4');return;}
+    document.getElementById('confirmaClasseNome').textContent=cap(S.classe);
+    document.getElementById('confirmaClasseText').textContent=cap(S.classe);
+    S.step=4; showStep('s4b'); renderProgress(); return;
+  }
+  if(n===5){
+    // confirmed classe
+    S.step=5; showStep('s5'); renderProgress(); return;
+  }
+  if(n===6){
+    if(!S.raca){showErr('e5');return;}
+    S.step=6; showStep('s6'); renderProgress(); return;
+  }
+  if(n===7){
+    if(!S.antecedente){showErr('e6');return;}
+    S.step=7; showStep('s7'); renderProgress(); return;
+  }
+  if(n===8){
+    if(!finalizeAtributos()) return;
+    S.step=8; buildFicha(); showStep('s8'); renderProgress(); return;
+  }
+  const stepMap={2:'s2',3:'s3',4:'s4'};
+  S.step=n; showStep(stepMap[n]); renderProgress();
+}
+
+function voltarClasse(){
+  S.classe='';
+  document.querySelectorAll('.sel-card').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('classDescBox').classList.remove('show');
+  S.step=4; showStep('s4'); renderProgress();
+}
+
+// ════════════════
+// NIVEL LIVE
+// ════════════════
+function liveNivel(){
+  const v=parseInt(document.getElementById('iNivel').value);
+  const box=document.getElementById('profBox');
+  if(v>=1&&v<=20){
+    const p=calcProf(v);
+    document.getElementById('profNum').textContent='+'+p;
+    const ranges=['','Níveis 1–4: +2','Níveis 1–4: +2','Níveis 1–4: +2','Níveis 1–4: +2',
+      'Níveis 5–8: +3','Níveis 5–8: +3','Níveis 5–8: +3','Níveis 5–8: +3',
+      'Níveis 9–12: +4','Níveis 9–12: +4','Níveis 9–12: +4','Níveis 9–12: +4',
+      'Níveis 13–16: +5','Níveis 13–16: +5','Níveis 13–16: +5','Níveis 13–16: +5',
+      'Níveis 17–20: +6','Níveis 17–20: +6','Níveis 17–20: +6','Níveis 17–20: +6'];
+    document.getElementById('profDesc').textContent=ranges[v];
+    box.style.display='block';
+  } else { box.style.display='none'; }
+}
+
+function calcProf(n){
+  if(n<=4)return 2; if(n<=8)return 3; if(n<=12)return 4; if(n<=16)return 5; return 6;
+}
+
+// ════════════════
+// BUILD GRIDS
+// ════════════════
+function buildClasseGrid(){
+  const g=document.getElementById('classeGrid');
+  Object.entries(CLASSES).forEach(([k,c])=>{
+    const d=document.createElement('div');
+    d.className='sel-card';
+    d.innerHTML=`<span class="ic">${c.ic}</span>${cap(k)}<span class="sub">${c.dado} · ${c.for_principal[0]}</span>`;
+    d.onclick=()=>selectClasse(k,d);
+    g.appendChild(d);
+  });
+}
+
+function selectClasse(k,el){
+  document.querySelectorAll('#classeGrid .sel-card').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  S.classe=k;
+  const c=CLASSES[k];
+  const box=document.getElementById('classDescBox');
+  document.getElementById('cdTitle').innerHTML=`${c.ic} ${cap(k)}`;
+  document.getElementById('cdBody').textContent=c.desc;
+  document.getElementById('cdStats').innerHTML=
+    `<div class="cd-stat"><strong>Dado de Vida:</strong> 1${c.dado}</div>
+     <div class="cd-stat"><strong>Testes de Resist.:</strong> ${c.tr.join(', ')}</div>
+     <div class="cd-stat"><strong>Armaduras:</strong> ${c.armor}</div>
+     <div class="cd-stat"><strong>Perícias:</strong> ${c.pericias}</div>`;
+  box.classList.add('show');
+}
+
+function buildRacaGrid(){
+  const g=document.getElementById('racaGrid');
+  Object.entries(RACAS).forEach(([k,r])=>{
+    const d=document.createElement('div');
+    d.className='sel-card';
+    const bStr=Object.entries(r.bonus).map(([a,v])=>`+${v} ${ASHORT[a]}`).join(' ');
+    d.innerHTML=`<span class="ic">${r.ic}</span>${capRaca(k)}<span class="sub">${bStr}</span>`;
+    d.onclick=()=>selectRaca(k,d);
+    g.appendChild(d);
+  });
+}
+
+function selectRaca(k,el){
+  document.querySelectorAll('#racaGrid .sel-card').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  S.raca=k;
+  const r=RACAS[k];
+  const box=document.getElementById('raceTraitBox');
+  document.getElementById('rtTitle').textContent=`Traços Raciais — ${capRaca(k)}`;
+  const bStr=Object.entries(r.bonus).map(([a,v])=>`+${v} ${ANAMES[a]}`).join(', ');
+  document.getElementById('rtPills').innerHTML=
+    `<span class="rt-pill bonus">🎯 ${bStr}</span>
+     <span class="rt-pill">⚡ ${r.vel} deslocamento</span>
+     <span class="rt-pill">👁 ${r.visao}</span>`+
+    r.traits.map(t=>`<span class="rt-pill">${t}</span>`).join('');
+  document.getElementById('rtDesc').textContent=r.desc;
+  box.classList.add('show');
+}
+
+function buildBgGrid(){
+  const g=document.getElementById('bgGrid');
+  Object.entries(ANTECEDENTES).forEach(([k,b])=>{
+    const d=document.createElement('div');
+    d.className='sel-card';
+    d.innerHTML=`<span class="ic">${b.ic}</span>${cap(k)}<span class="sub">${b.pericias.split(',')[0].trim()}...</span>`;
+    d.onclick=()=>selectBg(k,d);
+    g.appendChild(d);
+  });
+}
+
+function selectBg(k,el){
+  document.querySelectorAll('#bgGrid .sel-card').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  S.antecedente=k;
+  const b=ANTECEDENTES[k];
+  const box=document.getElementById('bgDescBox');
+  document.getElementById('bgTitle').innerHTML=`${b.ic} ${cap(k)}`;
+  document.getElementById('bgBody').textContent=b.desc;
+  document.getElementById('bgStats').innerHTML=
+    `<div class="cd-stat"><strong>Perícias:</strong> ${b.pericias}</div>
+     <div class="cd-stat"><strong>Idiomas:</strong> ${b.idiomas}</div>`;
+  box.classList.add('show');
+}
+
+// ════════════════
+// ATTRIBUTE MODES
+// ════════════════
+function setMode(m){
+  S.mode=m;
+  ['roll','std','pb'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===m);
+    document.getElementById('panel-'+t).classList.toggle('active',t===m);
+  });
+}
+
+// ─ ROLLING ─
+function rolarAtributos(){
+  const btn=document.getElementById('rollBtn');
+  btn.disabled=true; btn.textContent='Rolando...';
+  const log=document.getElementById('rollLog');
+  log.style.display='block';
+  log.innerHTML=`<div class="loading-dice"><div class="ld">?</div><div class="ld">?</div><div class="ld">?</div><div class="ld">?</div></div>`;
+
+  setTimeout(()=>{
+    const results={};
+    ATTRS.forEach(a=>{ results[a]=roll4d6(); });
+    S.rolled=true;
+    ATTRS.forEach(a=>{ S.atributos[a]=results[a].total; });
+    renderRollLog(results, log);
+    btn.disabled=false; btn.textContent='🎲 Rolar os Dados';
+    document.getElementById('rerollRow').style.display='flex';
+  }, 700);
+}
+
+function roll4d6(){
+  const d=[rnd(6),rnd(6),rnd(6),rnd(6)];
+  const sorted=[...d].sort((a,b)=>a-b);
+  const total=sorted[1]+sorted[2]+sorted[3];
+  return{dice:d, dropped:sorted[0], total};
+}
+
+function rnd(n){ return Math.floor(Math.random()*n)+1; }
+
+function renderRollLog(res,container){
+  let html=`<div class="roll-msg">✦ Menor dado de cada grupo descartado (riscado) ✦</div>`;
+  ATTRS.forEach(a=>{
+    const r=res[a];
+    const sorted=[...r.dice].sort((x,y)=>x-y);
+    let dropUsed=false;
+    const diceHtml=r.dice.map(v=>{
+      const isD=v===sorted[0]&&!dropUsed;
+      if(isD)dropUsed=true;
+      return `<div class="die ${isD?'dropped':'kept'}">${v}</div>`;
+    }).join('');
+    const mod=calcMod(r.total); const ms=mod>=0?'+'+mod:mod;
+    html+=`<div class="roll-attr-row">
+      <div class="ra-name">${ASHORT[a]}</div>
+      <div class="ra-dice">${diceHtml}</div>
+      <div class="ra-total">${r.total}</div>
+      <div class="ra-mod">${ms}</div>
+    </div>`;
+  });
+  container.innerHTML=html;
+}
+
+// ─ STD ARRAY ─
+function buildStdGrid(){
+  const g=document.getElementById('stdGrid');
+  ATTRS.forEach(a=>{
+    const row=document.createElement('div');
+    row.className='std-row';
+    const opts=STD_ARR.map(v=>`<option value="${v}">${v}</option>`).join('');
+    row.innerHTML=`<label>${ANAMES[a]}</label>
+      <select id="std_${a}" onchange="stdChange()">${opts}</select>`;
+    g.appendChild(row);
+  });
+  // default spread
+  ATTRS.forEach((a,i)=>{
+    document.getElementById('std_'+a).value=STD_ARR[i];
+  });
+}
+
+function stdChange(){
+  // just validate on submit
+}
+
+// ─ POINT BUY ─
+function buildPbGrid(){
+  const g=document.getElementById('pbGrid');
+  ATTRS.forEach(a=>{
+    const row=document.createElement('div');
+    row.className='pb-row';
+    row.innerHTML=`
+      <div class="pb-name">${ANAMES[a]}</div>
+      <div class="pb-controls">
+        <button class="pb-btn" onclick="pbChange('${a}',-1)">−</button>
+        <div class="pb-val" id="pbv_${a}">8</div>
+        <button class="pb-btn" onclick="pbChange('${a}',+1)">+</button>
+        <div class="pb-mod" id="pbm_${a}">-1</div>
+        <div class="pb-cost" id="pbc_${a}">(0pts)</div>
+      </div>`;
+    g.appendChild(row);
+  });
+  updatePbDisplay();
+}
+
+function pbChange(a,delta){
+  const cur=S.pbVals[a];
+  const next=cur+delta;
+  if(next<8||next>15)return;
+  const spent=pbSpent();
+  const diff=PB_COST[next]-PB_COST[cur];
+  if(diff>0&&spent+diff>PB_TOTAL)return;
+  S.pbVals[a]=next;
+  updatePbDisplay();
+}
+
+function pbSpent(){
+  return ATTRS.reduce((s,a)=>s+PB_COST[S.pbVals[a]],0);
+}
+
+function updatePbDisplay(){
+  const left=PB_TOTAL-pbSpent();
+  document.getElementById('pbLeft').textContent=left;
+  ATTRS.forEach(a=>{
+    const v=S.pbVals[a];
+    document.getElementById('pbv_'+a).textContent=v;
+    const m=calcMod(v); document.getElementById('pbm_'+a).textContent=(m>=0?'+':'')+m;
+    document.getElementById('pbc_'+a).textContent=`(${PB_COST[v]}pts)`;
+  });
+}
+
+// ════════════════
+// FINALIZE ATTRS
+// ════════════════
+function finalizeAtributos(){
+  if(S.mode==='roll'){
+    if(!S.rolled){ alert('Role os dados primeiro!'); return false; }
+    // already set
+    return true;
+  }
+  if(S.mode==='std'){
+    const vals=ATTRS.map(a=>parseInt(document.getElementById('std_'+a).value));
+    const used=[...vals].sort((a,b)=>a-b);
+    const exp=[...STD_ARR].sort((a,b)=>a-b);
+    if(JSON.stringify(used)!==JSON.stringify(exp)){
+      document.getElementById('stdWarn').style.display='block'; return false;
+    }
+    ATTRS.forEach((a,i)=>{ S.atributos[a]=parseInt(document.getElementById('std_'+a).value); });
+    return true;
+  }
+  if(S.mode==='pb'){
+    ATTRS.forEach(a=>{ S.atributos[a]=S.pbVals[a]; });
+    return true;
+  }
+  return true;
+}
+
+// ════════════════
+// BUILD FICHA
+// ════════════════
+function buildFicha(){
+  // Apply racial bonuses
+  const final={};
+  ATTRS.forEach(a=>{ final[a]=S.atributos[a]; });
+  const r=RACAS[S.raca];
+  if(r) Object.entries(r.bonus).forEach(([a,v])=>{ final[a]=(final[a]||8)+v; });
+
+  const cl=CLASSES[S.classe];
+  const bg=ANTECEDENTES[S.antecedente];
+
+  // Header
+  document.getElementById('shCharName').textContent=S.pers;
+  document.getElementById('shPlayer').textContent=`Jogador: ${S.jogador}`;
+
+  // Meta
+  const hitDieNum=parseInt(cl.dado.replace('d',''));
+  const conMod=calcMod(final.con);
+  const hp=hitDieNum+conMod;
+  document.getElementById('shMeta').innerHTML=
+    `<div class="meta-tile"><span class="mv">${cap(S.classe)}</span><span class="mk">Classe</span></div>
+     <div class="meta-tile"><span class="mv">${capRaca(S.raca)}</span><span class="mk">Raça</span></div>
+     <div class="meta-tile"><span class="mv">Nível ${S.nivel}</span><span class="mk">Experiência</span></div>
+     <div class="meta-tile"><span class="mv">1${cl.dado}</span><span class="mk">Dado de Vida</span></div>
+     <div class="meta-tile"><span class="mv">${cap(S.antecedente)}</span><span class="mk">Antecedente</span></div>
+     <div class="meta-tile"><span class="mv">${r.vel}</span><span class="mk">Deslocamento</span></div>`;
+
+  // Quote
+  const quotes={
+    bárbaro:'A fúria é um poder que preenche não apenas o frenesi de batalha, mas também reflexos, resiliência e proezas de força incríveis.',
+    bardo:'Palavras e música não são meras vibrações do ar, mas vocalizações com poder próprio.',
+    bruxo:'Você forjou um pacto com um ser de outro plano. O poder é seu — mas o preço ainda está por vir.',
+    clérigo:'Um clérigo não apenas realiza ritos sagrados — ele canaliza diretamente o poder divino para o mundo dos mortais.',
+    druida:'O multiverso está em equilíbrio delicado. O druida é seu guardião, voz e espada.',
+    feiticeiro:'A magia flui em seu sangue. Você não a estudou — você nasceu com ela.',
+    guerreiro:'Dominar todas as armas e armaduras não é apenas treino — é uma arte de vida.',
+    ladino:'Um ladino não ataca de frente. Ele encontra o ponto fraco, o momento certo, o golpe certeiro.',
+    mago:'O estudo rigoroso da magia arcana revela que o multiverso inteiro é escrito em uma língua — e você a lê.',
+    monge:'O ki é a energia mística que flui através dos seres vivos. Você aprendeu a canalizar esse poder.',
+    paladino:'Seu juramento sagrado não é apenas uma promessa — é uma fonte de poder divino que guia cada passo.',
+    patrulheiro:'A natureza selvagem não é inimiga — é aliada. Você aprendeu a ler suas trilhas e ouvir seus segredos.'
+  };
+  const qEl=document.getElementById('shQuote');
+  if(quotes[S.classe]){
+    qEl.innerHTML=`"${quotes[S.classe]}" <cite>— ${cap(S.classe)}, Livro do Jogador</cite>`;
+    qEl.style.display='block';
+  }
+
+  // Prof
+  document.getElementById('shProf').textContent=`+${S.profBonus}`;
+
+  // Attrs
+  const ag=document.getElementById('shAttrs');
+  ag.innerHTML='';
+  ATTRS.forEach(a=>{
+    const base=S.atributos[a], fin=final[a];
+    const mod=calcMod(fin); const ms=mod>=0?'+'+mod:''+mod;
+    const hasB=fin!==base;
+    ag.innerHTML+=`<div class="attr-card">
+      ${hasB?`<span class="ac-bonus-badge">+${fin-base}</span>`:''}
+      <span class="ac-label">${ANAMES[a]}</span>
+      <span class="ac-value">${fin}</span>
+      <span class="ac-mod">${ms}</span>
+      ${hasB?`<span class="ac-base">Base: ${base}</span>`:''}
+    </div>`;
+  });
+
+  // Combat
+  const ac= 10+calcMod(final.des);
+  document.getElementById('shCombat').innerHTML=
+    `<div class="combat-tile"><span class="ct-val">${hp>=1?hp:1}</span><span class="ct-label">PV Máximos (Nv.1)</span></div>
+     <div class="combat-tile"><span class="ct-val">${ac}</span><span class="ct-label">Classe de Armadura</span></div>
+     <div class="combat-tile"><span class="ct-val">${r.vel}</span><span class="ct-label">Deslocamento</span></div>`;
+
+  // Saving Throws
+  const sv=document.getElementById('shSaves');
+  sv.innerHTML='';
+  ATTRS.forEach(a=>{
+    const isPr=cl.tr.map(t=>t.toLowerCase()).includes(ANAMES[a].toLowerCase());
+    const val=calcMod(final[a])+(isPr?S.profBonus:0);
+    const ms=val>=0?'+'+val:''+val;
+    sv.innerHTML+=`<div class="save-row">
+      <div class="save-dot${isPr?' prof':''}"></div>
+      <div class="save-name">${ANAMES[a]}</div>
+      <div class="save-val">${ms}</div>
+    </div>`;
+  });
+
+  // Traits
+  const tr=document.getElementById('shTraits');
+  tr.innerHTML=r.traits.map(t=>`<span class="trait-pill">${t}</span>`).join('')+
+    `<span class="trait-pill red">👁 ${r.visao}</span>`;
+
+  // Extras
+  document.getElementById('shExtras').innerHTML=
+    `<div class="extra-box">
+       <div class="eb-title">Proficiências de Classe</div>
+       <div class="eb-val"><strong>${cl.armor}</strong><br>Armas: ${cl.armas}</div>
+     </div>
+     <div class="extra-box">
+       <div class="eb-title">Antecedente — ${cap(S.antecedente)}</div>
+       <div class="eb-val">Perícias: <strong>${bg.pericias}</strong><br>Idiomas: ${bg.idiomas}</div>
+     </div>`;
+}
+
+// ════════════════
+// UTILS
+// ════════════════
+function calcMod(v){ return Math.floor((v-10)/2); }
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function capRaca(s){ return s.split('-').map(p=>cap(p)).join('-'); }
+function showErr(id){ document.getElementById(id).classList.add('show'); }
+function hideAllErrors(){ document.querySelectorAll('.alert').forEach(a=>a.classList.remove('show')); }
+
+function printSheet(){
+  window.print();
+}
+
+function restart(){
+  Object.assign(S,{step:1,jogador:'',pers:'',nivel:1,profBonus:2,
+    classe:'',raca:'',antecedente:'',tendencia:'',
+    atributos:{for:8,des:8,con:8,inte:8,sab:8,car:8},
+    mode:'roll',stdAssign:{},pbVals:{for:8,des:8,con:8,inte:8,sab:8,car:8},rolled:false});
+  document.getElementById('iJogador').value='';
+  document.getElementById('iPers').value='';
+  document.getElementById('iNivel').value='';
+  document.getElementById('profBox').style.display='none';
+  document.querySelectorAll('.sel-card').forEach(b=>b.classList.remove('selected'));
+  document.querySelectorAll('.class-desc-box,.race-trait-box').forEach(b=>b.classList.remove('show'));
+  document.getElementById('rollLog').style.display='none';
+  document.getElementById('rerollRow').style.display='none';
+  document.getElementById('rollBtn').textContent='🎲 Rolar os Dados';
+  document.getElementById('stdWarn').style.display='none';
+  S.pbVals={for:8,des:8,con:8,inte:8,sab:8,car:8};
+  updatePbDisplay();
+  setMode('roll');
+  showStep('s1'); S.step=1; renderProgress();
+}
+</script>
+
+<style>
+@media print {
+  body { background:#fff; color:#000; }
+  body::before, body::after { display:none; }
+  .wrap { padding:0; max-width:100%; }
+  .site-header, .progress-wrap, .divider, .btn, .sheet-actions { display:none!important; }
+  .panel { border:none; box-shadow:none; background:#fff; padding:.5rem; }
+  .panel::before, .panel-corner, .panel::after { display:none; }
+  .step { display:block!important; }
+  #s1,#s2,#s3,#s4,#s4b,#s5,#s6,#s7 { display:none!important; }
+  #s8 { display:block!important; }
+  .attr-card { border:1px solid #999; break-inside:avoid; }
+  .attr-card:hover { transform:none; }
+  .meta-tile { border:1px solid #ccc; }
+  .combat-tile, .save-row, .extra-box { border:1px solid #ddd; }
+  .char-quote { border-left:3px solid #999; }
+  .sheet-char-name { color:#000; text-shadow:none; }
+  .section-head { color:#333; }
+  .section-head::after { background:#ccc; }
+  .prof-bar { border:1px solid #ccc; background:#f5f5f5; }
+  .prof-bar .pval { color:#333; text-shadow:none; }
+  .ac-value, .ac-mod, .ct-val { color:#000; text-shadow:none; }
+}
+</style>
+</body>
+</html>
